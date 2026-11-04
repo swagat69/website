@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bhagavad Gita</title>
+  <meta name="description" content="Read the Bhagavad Gita verse by verse in Sanskrit, with English and Hindi translations.">
+  <meta name="theme-color" content="#F9F8EC">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%231E1E1E'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle' fill='%23F9F8EC' font-family='serif'%3E%E0%A5%90%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..100,400..800&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400&family=Tiro+Devanagari+Sanskrit&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    /* Apply saved language and text size before first paint. */
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('gita:settings') || '{}');
+        if (s.lang === 'hi') document.documentElement.lang = 'hi';
+        if (s.large) document.documentElement.classList.add('large-text');
+      } catch (e) { /* storage unavailable: defaults */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-action="skip">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true">ॐ</span>
+        <span class="brand-text" data-i18n="brand">Bhagavad Gita</span>
+      </a>
+      <div class="controls">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-action="lang" data-lang="en" lang="en">English</button>
+          <button type="button" data-action="lang" data-lang="hi" lang="hi">हिन्दी</button>
+        </div>
+        <button type="button" class="size-btn" data-action="size" aria-pressed="false">
+          <span class="size-icon" aria-hidden="true">Aa</span>
+          <span class="size-label" data-i18n="largeText">Large text</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <p class="state">Loading…</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner" id="footer"></div>
+  </footer>
+
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
