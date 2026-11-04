@@ -1,5 +1,5 @@
 /* Bhagavad Gita reader — routing, rendering and motion.
-   Pages: Home (#/) → Chapter (#/chapter/2) → Verse (#/chapter/2/verse/47). */
+   Pages: Home (#home) → Chapter (#chapter-2) → Verse (#chapter-2-verse-47). */
 (() => {
   'use strict';
 
@@ -162,15 +162,15 @@
     const resume = lastRead && idx.chapters[lastRead.c - 1] && lastRead.v <= idx.chapters[lastRead.c - 1].verses
       ? lastRead : null;
     const cta = resume
-      ? `<a class="btn btn-primary" href="#/chapter/${resume.c}/verse/${resume.v}">${esc(t('resume', resume.c, resume.v))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>
-         <a class="btn btn-secondary" href="#/chapter/1/verse/1">${esc(t('startOver'))}</a>`
-      : `<a class="btn btn-primary" href="#/chapter/1/verse/1">${esc(t('start'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>`;
+      ? `<a class="btn btn-primary" href="#chapter-${resume.c}-verse-${resume.v}">${esc(t('resume', resume.c, resume.v))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>
+         <a class="btn btn-secondary" href="#chapter-1-verse-1">${esc(t('startOver'))}</a>`
+      : `<a class="btn btn-primary" href="#chapter-1-verse-1">${esc(t('start'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>`;
 
     const title = t('heroTitle').map((w) => `<span class="mask"><span>${esc(w)}</span></span>`).join(' ');
 
     const cards = idx.chapters.map((ch) => `
       <li>
-        <a class="ch-card" href="#/chapter/${ch.n}" style="--c: var(--c${ch.n})">
+        <a class="ch-card" href="#chapter-${ch.n}" style="--c: var(--c${ch.n})">
           <span class="ch-no" aria-hidden="true">${pad(ch.n)}</span>
           <span class="ch-go" aria-hidden="true">→</span>
           <span class="visually-hidden">${esc(t('chapter', ch.n))}:</span>
@@ -228,7 +228,7 @@
 
     const rows = data.verses.map((v) => `
       <li>
-        <a class="v-row" href="#/chapter/${n}/verse/${v.v}">
+        <a class="v-row" href="#chapter-${n}-verse-${v.v}">
           <span class="v-no">${n}.${v.v}</span>
           <span class="v-text">${esc(translationOf(v, idx).text)}</span>
           <span class="v-go" aria-hidden="true">→</span>
@@ -240,12 +240,12 @@
       html: `
         <section class="ch-hero" style="--c: var(--c${n})">
           <div class="wrap">
-            <a class="back-link reveal" href="#/"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('allChapters'))}</span></a>
+            <a class="back-link reveal" href="#home"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('allChapters'))}</span></a>
             <p class="ch-hero-label meta reveal">${meta(t('chapter', n), t('verses', ch.verses))}</p>
             <h1 tabindex="-1"${hindi() ? ' lang="sa"' : ''}><span class="mask"><span>${esc(chapterName(ch))}</span></span></h1>
             ${hindi() ? '' : `<p class="ch-hero-sa reveal" lang="sa">${esc(ch.name_sa)}</p>
             <p class="ch-hero-meaning reveal">${esc(ch.meaning_en)}</p>`}
-            <a class="btn btn-primary reveal" href="#/chapter/${n}/verse/1">${esc(t('startChapter'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>
+            <a class="btn btn-primary reveal" href="#chapter-${n}-verse-1">${esc(t('startChapter'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>
           </div>
           <span class="ch-hero-num" aria-hidden="true">${pad(n)}</span>
         </section>
@@ -261,8 +261,8 @@
             <h2 class="list-title" id="verses-title">${esc(t('verseList'))}</h2>
             <ol class="verse-list">${rows}</ol>
             <nav class="pager" aria-label="${esc(t('chapters'))}">
-              ${prev ? `<a class="btn btn-secondary" href="#/chapter/${prev.n}"><span class="arrow arrow-l" aria-hidden="true">←</span> ${esc(t('prevChapter'))}</a>` : ''}
-              ${next ? `<a class="btn btn-primary${prev ? '' : ' only-next'}" href="#/chapter/${next.n}">${esc(t('nextChapter'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>` : ''}
+              ${prev ? `<a class="btn btn-secondary" href="#chapter-${prev.n}"><span class="arrow arrow-l" aria-hidden="true">←</span> ${esc(t('prevChapter'))}</a>` : ''}
+              ${next ? `<a class="btn btn-primary${prev ? '' : ' only-next'}" href="#chapter-${next.n}">${esc(t('nextChapter'))} <span class="arrow arrow-r" aria-hidden="true">→</span></a>` : ''}
             </nav>
           </section>
         </div>`,
@@ -303,7 +303,7 @@
       html: `
         <div class="read" style="--c: var(--c${n})">
           <div class="verse-head">
-            <a class="back-link" href="#/chapter/${n}"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('backTo', n, chapterName(ch)))}</span></a>
+            <a class="back-link" href="#chapter-${n}"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('backTo', n, chapterName(ch)))}</span></a>
             <div class="progress">
               <p class="progress-label" id="progress-label">${esc(t('progress', vn, total))}</p>
               <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${vn}">
@@ -329,8 +329,8 @@
         </div>
         <nav class="verse-pager" aria-label="${esc(t('verseList'))}">
           <div class="read">
-            ${prev ? `<a class="btn btn-secondary" rel="prev" href="#/chapter/${prev[0]}/verse/${prev[1]}"><span class="arrow arrow-l" aria-hidden="true">←</span> ${esc(t('prevVerse'))}</a>` : ''}
-            ${next ? `<a class="btn btn-primary${prev ? '' : ' only-next'}" rel="next" href="#/chapter/${next[0]}/verse/${next[1]}">${esc(nextLabel)} <span class="arrow arrow-r" aria-hidden="true">→</span></a>` : ''}
+            ${prev ? `<a class="btn btn-secondary" rel="prev" href="#chapter-${prev[0]}-verse-${prev[1]}"><span class="arrow arrow-l" aria-hidden="true">←</span> ${esc(t('prevVerse'))}</a>` : ''}
+            ${next ? `<a class="btn btn-primary${prev ? '' : ' only-next'}" rel="next" href="#chapter-${next[0]}-verse-${next[1]}">${esc(nextLabel)} <span class="arrow arrow-r" aria-hidden="true">→</span></a>` : ''}
           </div>
         </nav>`,
       enter() {
@@ -373,7 +373,7 @@
     return {
       title: `${t('notFound')} · ${t('brand')}`,
       html: `<div class="read notice"><h1 tabindex="-1">${esc(t('notFound'))}</h1><p>${esc(t('notFoundText'))}</p>
-             <a class="btn btn-primary" href="#/">${esc(t('allChapters'))}</a></div>`,
+             <a class="btn btn-primary" href="#home">${esc(t('allChapters'))}</a></div>`,
     };
   }
 
@@ -391,12 +391,12 @@
   function batchReveal(selector, { y = 32, stagger = 0.06 } = {}) {
     const items = main.querySelectorAll(selector);
     if (!items.length || !ScrollTrigger) return;
-    // Opacity only (not visibility) so links stay reachable with the keyboard before they animate in.
-    gsap.set(items, { y, opacity: 0 });
+    // Items stay fully visible until they reach the viewport, then rise in.
+    // Opacity only (not visibility) so links stay reachable with the keyboard.
     ScrollTrigger.batch(items, {
-      start: 'top 92%',
+      start: 'top 95%',
       once: true,
-      onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger, overwrite: true }),
+      onEnter: (batch) => gsap.fromTo(batch, { y, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger, overwrite: true }),
     });
   }
 
@@ -425,15 +425,14 @@
   // ---------------------------------------------------------------------------
   // Router
   // ---------------------------------------------------------------------------
+  // Routes are plain hashes: #home, #chapter-2, #chapter-2-verse-47.
+  // Older links in the form #/chapter/2/verse/47 still work.
   function parseRoute() {
-    const parts = location.hash.replace(/^#\/?/, '').split('?')[0].split('/').filter(Boolean);
-    if (!parts.length) return { view: 'home' };
-    const num = (s) => (/^\d+$/.test(s) ? Number(s) : NaN);
-    if (parts[0] === 'chapter' && parts.length === 2) return { view: 'chapter', c: num(parts[1]) };
-    if (parts[0] === 'chapter' && parts[2] === 'verse' && parts.length === 4) {
-      return { view: 'verse', c: num(parts[1]), v: num(parts[3]) };
-    }
-    return { view: 'notfound' };
+    const key = location.hash.slice(1).replace(/^\/+/, '').replace(/\/+$/, '').replace(/\//g, '-');
+    if (!key || key === 'home') return { view: 'home' };
+    const m = /^chapter-(\d+)(?:-verse-(\d+))?$/.exec(key);
+    if (!m) return { view: 'notfound' };
+    return m[2] ? { view: 'verse', c: Number(m[1]), v: Number(m[2]) } : { view: 'chapter', c: Number(m[1]) };
   }
 
   let renderId = 0;

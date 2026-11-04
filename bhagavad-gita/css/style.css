@@ -89,8 +89,13 @@ button { font: inherit; color: inherit; }
 
 :focus-visible { outline: 3px solid var(--link); outline-offset: 3px; border-radius: 8px; }
 
-.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
-.read { width: 100%; max-width: calc(var(--read) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+/* Side gutters also clear a phone's side system bar (landscape notch). */
+.wrap, .read, .topbar-inner {
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; }
+.read { width: 100%; max-width: calc(var(--read) + 2 * var(--gutter)); margin: 0 auto; }
 
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; overflow: hidden;
@@ -107,18 +112,24 @@ button { font: inherit; color: inherit; }
 }
 .skip-link:focus { top: 12px; }
 
-.state { text-align: center; padding: 120px var(--gutter); color: var(--ink-2); }
+.state { text-align: center; padding-block: 120px; color: var(--ink-2); }
 
 /* ---------- Header -------------------------------------------------------- */
 
+/* Paints the band above the sticky header on phones with a notch. */
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 31;
+  background: var(--paper);
+}
+
 .topbar {
-  position: sticky; top: 0; z-index: 30;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
 }
 .topbar-inner {
-  max-width: var(--wrap); margin: 0 auto; padding: 10px var(--gutter);
+  max-width: var(--wrap); margin: 0 auto; padding-block: 10px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 .brand { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; color: var(--ink); text-decoration: none; min-width: 0; }
