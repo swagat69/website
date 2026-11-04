@@ -171,8 +171,10 @@
     const cards = idx.chapters.map((ch) => `
       <li>
         <a class="ch-card" href="#chapter-${ch.n}" style="--c: var(--c${ch.n})">
-          <span class="ch-no" aria-hidden="true">${pad(ch.n)}</span>
-          <span class="ch-go" aria-hidden="true">→</span>
+          <span class="ch-top" aria-hidden="true">
+            <span class="ch-no">${pad(ch.n)}</span>
+            <span class="ch-go">→</span>
+          </span>
           <span class="visually-hidden">${esc(t('chapter', ch.n))}:</span>
           <span class="ch-title"${hindi() ? ' lang="sa"' : ''}>${esc(chapterName(ch))}</span>
           ${hindi() ? '' : `<span class="ch-sub">${esc(ch.meaning_en)}</span>`}
@@ -301,22 +303,20 @@
     return {
       title: `${t('verseTitle', n, vn)} · ${t('brand')}`,
       html: `
-        <div class="read" style="--c: var(--c${n})">
-          <div class="verse-head">
-            <a class="back-link" href="#chapter-${n}"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('backTo', n, chapterName(ch)))}</span></a>
-            <div class="progress">
-              <p class="progress-label" id="progress-label">${esc(t('progress', vn, total))}</p>
-              <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${vn}">
-                <span class="progress-fill" style="width:${(vn / total) * 100}%"></span>
-              </div>
-            </div>
-          </div>
+        <div class="read verse" style="--c: var(--c${n})">
+          <a class="back-link" href="#chapter-${n}"><span aria-hidden="true">←</span> <span class="back-text">${esc(t('backTo', n, chapterName(ch)))}</span></a>
           <h1 class="verse-title" tabindex="-1"><span class="mask"><span>${esc(t('verseTitle', n, vn))}</span></span></h1>
+          <div class="progress">
+            <div class="progress-track" role="progressbar" aria-labelledby="progress-label" aria-valuemin="1" aria-valuemax="${total}" aria-valuenow="${vn}">
+              <span class="progress-fill" style="width:${(vn / total) * 100}%"></span>
+            </div>
+            <p class="progress-label" id="progress-label">${esc(t('progress', vn, total))}</p>
+          </div>
           <figure class="shloka-card">
             ${verse.sa_speaker ? `<p class="speaker" lang="sa">${esc(verse.sa_speaker)}</p>` : ''}
             <p class="shloka" lang="sa">${lines(verse.sa)}</p>
+            ${hindi() ? '' : `<p class="translit" lang="sa-Latn">${verse.tr_speaker ? `<span class="line">${esc(verse.tr_speaker)}</span>` : ''}${lines(verse.tr)}</p>`}
           </figure>
-          ${hindi() ? '' : `<p class="translit" lang="sa-Latn">${verse.tr_speaker ? `<span class="line">${esc(verse.tr_speaker)}</span>` : ''}${lines(verse.tr)}</p>`}
           <section class="translation-block" aria-labelledby="tr-title">
             <h2 class="label" id="tr-title">${esc(t('translation'))}</h2>
             <p class="translation">${esc(tr.text)}</p>
@@ -336,12 +336,12 @@
       enter() {
         if (!animate()) return;
         const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-        tl.from('.verse-head', { y: -12, autoAlpha: 0, duration: 0.6 })
+        tl.from('.verse > .back-link', { x: -12, autoAlpha: 0, duration: 0.6 })
+          .from('.verse-title .mask > span', { yPercent: 110, duration: 0.9 }, 0.05)
           .from('.progress-fill', { width: `${((vn - 1) / total) * 100}%`, duration: 1.2, ease: 'power3.out' }, 0.1)
-          .from('.verse-title .mask > span', { yPercent: 110, duration: 0.9 }, 0.1)
           .from('.shloka-card', { y: 40, scale: 0.97, autoAlpha: 0, duration: 1 }, 0.2)
-          .from('.shloka-card .speaker, .shloka .line', { y: 18, autoAlpha: 0, duration: 0.8, stagger: 0.12 }, 0.45)
-          .from('.translit, .translation-block, .accordions', { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.08 }, 0.6);
+          .from('.shloka-card .speaker, .shloka .line, .translit', { y: 18, autoAlpha: 0, duration: 0.8, stagger: 0.1 }, 0.45)
+          .from('.translation-block, .accordions', { y: 24, autoAlpha: 0, duration: 0.8, stagger: 0.08 }, 0.6);
       },
     };
   }
